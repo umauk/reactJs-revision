@@ -117,3 +117,140 @@ npx parcel build index.html
 ### Q: What are transitive dependencies?
 
 **A:** They are packages that a dependency uses. For example, if Parcel depends on another package, that package is a transitive dependency of this project.
+
+
+
+### 15-11-2026
+
+## JSX and React
+
+### Q: Is JSX part of React?
+
+**A:** No. JSX and React are separate things. React is a JavaScript library for building user interfaces; JSX is a syntax extension for JavaScript that lets us write markup-like code inside JavaScript. They are often used together, but React does not require JSX.
+
+### Q: What is JSX?
+
+**A:** JSX stands for **JavaScript XML**. It is a JavaScript syntax extension that looks similar to HTML and describes the UI elements a component should return. JSX is not HTML: it is written in a JavaScript file and must be transformed into regular JavaScript before browsers can run it.
+
+```jsx
+const heading = <h1>Hello, React!</h1>;
+```
+
+### Q: Can we write a React project without JSX?
+
+**A:** Yes. We can create React elements by calling `createElement` from React directly. JSX is optional; it mainly makes UI code easier to read and write, especially when the markup is nested.
+
+```js
+import { createElement } from 'react';
+
+const heading = createElement('h1', null, 'Hello, React!');
+```
+
+### Q: How does JSX become something the browser can run?
+
+**A:** A build tool such as Parcel uses a JSX transform to convert JSX into JavaScript calls that create React elements. The browser does not understand JSX syntax by itself. With the modern JSX transform, we usually do not need to import React just to write JSX, though we still import React APIs that our code uses.
+
+### Q: What is the interview answer for “Is JSX required to use React?”
+
+**A:** “No. JSX is optional syntax that is commonly used with React. It makes UI descriptions readable, and a build tool transforms it into JavaScript. We can write React without JSX by using `createElement`.”
+
+### Q: Is writing JSX inside a JavaScript file correct?
+
+**A:** Yes, when the project uses a tool that understands and transforms JSX. JSX is a JavaScript syntax extension, so a browser cannot parse raw JSX as ordinary JavaScript on its own.
+
+### Q: If the browser does not understand JSX, why does JSX render in the UI?
+
+**A:** Parcel processes the source before the browser runs it. Its built-in JavaScript transformer compiles JSX into JavaScript that creates React elements. Parcel then serves the transformed bundle. In the browser, React DOM takes the React elements and updates the actual DOM, which is what appears in the page.
+
+```text
+JSX source → Parcel transforms it → browser runs JavaScript → React DOM updates the page
+```
+
+### Q: Does Parcel use Babel to transform JSX?
+
+**A:** Parcel supports JSX out of the box. In Parcel 2, its built-in transformer handles JSX by default; Babel can be added for custom transforms or plugins, but it is not necessarily the default tool doing the JSX transformation. Parcel's documentation describes its built-in JavaScript compiler as SWC-based.
+
+### Q: What is the difference between transforming JSX and rendering the UI?
+
+**A:** **Transforming** is a build-time step: Parcel converts JSX syntax into JavaScript. **Rendering** happens in the browser: React DOM reads the React elements produced by that JavaScript and applies updates to the browser DOM. Parcel prepares the code; React and React DOM create and update the UI at runtime.
+
+## React components
+
+### Q: What is a component in React?
+
+**A:** A component is a reusable, self-contained part of a user interface. It is usually a JavaScript function that returns a description of what React should display. Components can receive data through props and can be combined or nested to build larger parts of a page. Component names must start with a capital letter.
+
+```jsx
+function Welcome() {
+  return <h1>Welcome!</h1>;
+}
+```
+
+### Q: How many main types of React components are there?
+
+**A:** The two main types traditionally taught are **function components** and **class components**. Function components are the recommended choice for new code. Class components are still supported, and you may see them in older codebases.
+
+### Q: What is a function component?
+
+**A:** A function component is a JavaScript function whose name starts with a capital letter and which returns React elements (often written with JSX). It can use Hooks, such as `useState`, to handle state and other React features.
+
+```jsx
+function Counter() {
+  return <button>Count</button>;
+}
+```
+
+### Q: What is a class component?
+
+**A:** A class component is a JavaScript class that extends React's `Component` class and defines a `render()` method that returns React elements. Class components can use `this.state` and `this.setState()` for state. Hooks are not used inside class components.
+
+```jsx
+import { Component } from 'react';
+
+class Welcome extends Component {
+  render() {
+    return <h1>Welcome!</h1>;
+  }
+}
+```
+
+### Q: Which type of component should I use in a new React project?
+
+**A:** Use function components. They work with Hooks and are the current recommended style. Learn class components so you can understand and maintain older React code.
+
+### Q: What is a concise interview answer for “What are React components?”
+
+**A:** “Components are reusable building blocks of a React UI. The two main types are function components and class components. Function components are preferred in modern React; class components remain supported, mainly for existing code.”
+
+### Q: What is component composition in React?
+
+**A:** Component composition means building a larger UI by combining smaller components. A parent component can render child components, pass them data through props, and arrange them into a page. This encourages reuse and keeps each component focused on a clear part of the interface.
+
+```jsx
+function Header() {
+  return <h1>My Shop</h1>;
+}
+
+function ProductCard({ name }) {
+  return <p>Product: {name}</p>;
+}
+
+function App() {
+  return (
+    <main>
+      <Header />
+      <ProductCard name="Tea" />
+      <ProductCard name="Coffee" />
+    </main>
+  );
+}
+```
+
+Here, `App` composes `Header` and `ProductCard` to form a larger UI. The `name` prop lets the same `ProductCard` component display different products.
+
+### Q: What is a concise interview answer for “What is component composition?”
+
+**A:** “Component composition is the practice of assembling a user interface from smaller components. Parent components render child components and can pass them data through props, which makes the UI easier to reuse and maintain.”
+
+
+
