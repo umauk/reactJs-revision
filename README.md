@@ -253,4 +253,70 @@ Here, `App` composes `Header` and `ProductCard` to form a larger UI. The `name` 
 **A:** “Component composition is the practice of assembling a user interface from smaller components. Parent components render child components and can pass them data through props, which makes the UI easier to reuse and maintain.”
 
 
+### 16-11-2026
+
+## Babel
+
+### Q: What is Babel?
+
+**A:** Babel is a JavaScript compiler and toolchain. It can transform newer JavaScript syntax into syntax supported by the environments we target, and it can transform JSX into regular JavaScript. Babel applies transformations through plugins and presets.
+
+### Q: Why is Babel used?
+
+**A:** Babel helps developers write modern JavaScript or JSX while supporting build targets that may not understand that source syntax. It can also apply custom code transformations through plugins. The exact output depends on the configured targets, plugins, and presets.
+
+### Q: How does Babel transform JSX?
+
+**A:** A JSX transform converts JSX markup into JavaScript calls that create React elements. For example, JSX such as `<h1>Hello</h1>` is transformed into JavaScript using the React JSX runtime. The browser runs the resulting JavaScript, not the original JSX syntax.
+
+### Q: What are Babel plugins and presets?
+
+**A:** A **plugin** performs a specific transformation. A **preset** is a reusable collection of plugins and configuration for a common set of transformations. For example, `@babel/preset-react` configures transformations for React JSX.
+
+### Q: Does this project need Babel for Parcel to understand JSX?
+
+**A:** No separate Babel setup is required for the project's basic JSX use. Parcel supports JSX out of the box using its built-in JavaScript transformer. Babel can be configured with Parcel when a project needs custom Babel plugins or transformations.
+
+### Q: Does Babel make every JavaScript feature work in every browser?
+
+**A:** No. Babel can transform syntax, but some newer JavaScript APIs need runtime polyfills if the target environment does not provide them. Which transformations or polyfills are needed depends on the project's browser targets and configuration.
+
+### Q: What is a concise interview answer for “What is Babel?”
+
+**A:** “Babel is a JavaScript compiler that transforms modern JavaScript and JSX into code suited to configured environments. It uses plugins and presets to decide which transformations to apply. Tools such as Parcel can provide JSX transformation without requiring a separate Babel setup.”
+
+## Web security: Cross-Site Scripting (XSS)
+
+### Q: What is a Cross-Site Scripting attack?
+
+**A:** Cross-Site Scripting (**XSS**) is a security vulnerability where an attacker gets a website to run unwanted script in another user's browser. It often happens when untrusted input is inserted into a page as executable HTML or JavaScript instead of being treated safely as data. The script runs in the context of the vulnerable site and may be able to act as that user or access data available to the page.
+
+### Q: What are common types of XSS?
+
+**A:** The common categories are:
+
+- **Stored XSS:** Malicious content is saved by the application (for example, in a comment) and runs when other users view it.
+- **Reflected XSS:** Untrusted input from a request is immediately included in the response page unsafely.
+- **DOM-based XSS:** Client-side JavaScript puts untrusted data into an unsafe DOM location, causing the browser to interpret it as code or markup.
+
+### Q: How does React help prevent XSS?
+
+**A:** React escapes text rendered through normal JSX expressions, so a string is treated as text rather than parsed as HTML. This helps prevent many injection issues, but it does not make every use of untrusted data safe. Avoid inserting untrusted HTML with `dangerouslySetInnerHTML`; if displaying user-authored HTML is required, sanitize it with a trusted HTML sanitizer and handle URLs and other contexts safely.
+
+```jsx
+function Comment({ text }) {
+  // React renders text as text by default
+  return <p>{text}</p>;
+}
+```
+
+### Q: Is React alone enough to prevent XSS?
+
+**A:** No. React's default escaping is helpful, but unsafe HTML insertion, unsafe URL handling, or other direct DOM APIs can still create vulnerabilities. Use context-appropriate output encoding or sanitization, avoid dangerous injection points, and consider Content Security Policy as an extra layer rather than the main fix.
+
+### Q: What is a concise interview answer for “What is XSS?”
+
+**A:** “XSS is a vulnerability that lets an attacker cause their script to run in another user's browser through a trusted website. React escapes normal text expressions by default, but developers must still avoid unsafe HTML insertion and sanitize untrusted HTML when it is necessary.”
+
+
 
