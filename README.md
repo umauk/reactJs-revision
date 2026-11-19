@@ -319,4 +319,143 @@ function Comment({ text }) {
 **A:** “XSS is a vulnerability that lets an attacker cause their script to run in another user's browser through a trusted website. React escapes normal text expressions by default, but developers must still avoid unsafe HTML insertion and sanitize untrusted HTML when it is necessary.”
 
 
+### 17-11-2026
+
+## React props
+
+### Q: What are props in React?
+
+**A:** Props (short for **properties**) are inputs that a parent component passes to a child component. They let the parent provide data or behavior so the child can render or respond accordingly. Props can hold strings, numbers, objects, arrays, functions, and other JavaScript values.
+
+```jsx
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+function App() {
+  return <Greeting name="Uday" />;
+}
+```
+
+Here, `App` passes the `name` prop to `Greeting`.
+
+### Q: How does a function component receive props?
+
+**A:** A function component receives one props object as its argument. We commonly use object destructuring to read individual props, as in `function Greeting({ name })`. The equivalent without destructuring is `function Greeting(props)` and then using `props.name`.
+
+### Q: Are props read-only?
+
+**A:** Yes. A component should treat its props as read-only and must not change them. If a value needs to change, the component that owns the value should update its state and pass the new value down as a prop.
+
+### Q: Can we pass a function as a prop?
+
+**A:** Yes. A parent can pass a function to a child as a prop. This is commonly used to let a child notify the parent about an event, such as a button click.
+
+```jsx
+function SaveButton({ onSave }) {
+  return <button onClick={onSave}>Save</button>;
+}
+```
+
+### Q: What is the difference between props and state?
+
+**A:** Props are inputs received from a parent component; the receiving component reads them but does not change them. State is data managed by a component that can change over time, usually through a state setter such as `setCount`. When state changes, React renders again, and the component may then receive updated props from its parent.
+
+### Q: What is the `children` prop?
+
+**A:** When JSX is nested inside a component's opening and closing tags, React passes that nested content to the component in a prop named `children`.
+
+```jsx
+function Card({ children }) {
+  return <section className="card">{children}</section>;
+}
+
+<Card><p>Card content</p></Card>
+```
+
+### Q: What is a concise interview answer for “What are props?”
+
+**A:** “Props are read-only inputs passed from a parent component to a child. They allow components to be configured with data, nested content, or callback functions, which supports reusable component design.”
+
+## Config-driven UI
+
+### Q: What is a config-driven UI?
+
+**A:** A config-driven UI is an approach where some UI choices—such as which components to show, their order, labels, or options—come from configuration data instead of being individually hard-coded in the component. React still renders the UI; the configuration tells the application which of its existing components to use and how to configure them.
+
+```jsx
+const sections = [
+  { type: 'heading', text: 'Featured products' },
+  { type: 'product', name: 'Tea' },
+  { type: 'product', name: 'Coffee' },
+];
+
+function Page() {
+  return (
+    <main>
+      {sections.map((section, index) => {
+        if (section.type === 'heading') {
+          return <h2 key={index}>{section.text}</h2>;
+        }
+        if (section.type === 'product') {
+          return <p key={index}>Product: {section.name}</p>;
+        }
+        return null;
+      })}
+    </main>
+  );
+}
+```
+
+Here, the `sections` configuration controls which items appear and in what order. In a larger application, the configuration might come from a local file, an API, or a content management system.
+
+### Q: Why use a config-driven UI?
+
+**A:** It can make repeated screens easier to reuse and allow certain content or layout choices to change through configuration. It is useful for things such as navigation menus, product lists, forms, and dashboards that follow a known set of component patterns.
+
+### Q: Does config-driven UI mean the configuration can create any UI or run code?
+
+**A:** No. Configuration normally selects from components and behaviors that the application has explicitly implemented. Keep the allowed component types defined in code, validate configuration data, and do not execute arbitrary code or unsanitized HTML from a configuration source.
+
+### Q: What is a concise interview answer for “What is config-driven UI?”
+
+**A:** “Config-driven UI means describing UI choices in data and using React components to render that data. Instead of hard-coding every repeated screen, the app maps a validated configuration to a known set of components, which improves reuse and makes supported layouts easier to change.”
+
+## Rendering lists
+
+### Q: What is the `key` prop when rendering a list?
+
+**A:** `key` is a special value React uses to identify each item in a rendered list. It helps React match items between renders when the list changes. Pass a stable, unique value such as an item's ID:
+
+```jsx
+{restaurants.map((restaurant) => (
+  <RestaurantCard
+    key={restaurant.id}
+    id={restaurant.id}
+    restaurant={restaurant}
+  />
+))}
+```
+
+React uses `key` internally and does not pass it to `RestaurantCard` as a prop. The component can read `id` and `restaurant`, because those are regular props. If the component needs the ID, pass it separately as `id`, then read it with `const { id, restaurant } = props` or `function RestaurantCard({ id, restaurant })`.
+
+### Q: Why is `props.key` undefined?
+
+**A:** React reserves `key` for its own list rendering. Even though we write `key={restaurant.id}`, the component cannot access it through `props.key`. Pass the same value using another prop name, such as `id={restaurant.id}`, if the component needs it.
+
+### Q: Why should we use keys on components rendered from a list?
+
+**A:** A key gives each list item a stable identity among its siblings. When items are added, removed, or reordered, React uses the keys to match each new item with the corresponding item from the previous render and update the right component and DOM. This also helps React preserve the correct component state for each item.
+
+In this app, `key={restaurant.id}` is a good choice because each restaurant has a stable ID. The key belongs on the top-level element returned for each item inside `restaurants.map()`—here, that is `<RestaurantCard />`.
+
+### Q: Can I use the array index as a key?
+
+**A:** Prefer a stable ID from the data. An array index may work for a list that never changes order and never has items inserted or removed. But when a list changes, indexes can point to different items, which may cause React to reuse the wrong component or preserve state on the wrong row. Avoid generating a new key on every render, such as with `Math.random()`, because React will treat each item as new each time.
+
+### Q: Do keys need to be unique everywhere in the app?
+
+**A:** No. Keys need to be unique among siblings in the same rendered list. The same key can appear in a different list elsewhere.
+
+
 
